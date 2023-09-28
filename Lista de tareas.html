@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tareas con Temas de Estudio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #taskInput {
+            width: 60%;
+            padding: 10px;
+        }
+        #addButton {
+            padding: 10px;
+            cursor: pointer;
+        }
+        #taskList {
+            list-style: none;
+        }
+        .task {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .task img {
+            width: 100px;
+            height: auto;
+            margin-right: 10px;
+        }
+        .complete-button, .delete-button {
+            padding: 5px 10px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Tareas con Temas de Estudio</h1>
+    <input type="text" id="taskInput" placeholder="Agregar nuevo tema de estudio">
+    <button id="addButton">Agregar tema</button>
+    <ul id="taskList"></ul>
+
+    <script>
+        const taskInput = document.getElementById('taskInput');
+        const addButton = document.getElementById('addButton');
+        const taskList = document.getElementById('taskList');
+
+        addButton.addEventListener('click', () => {
+            const newTask = taskInput.value.trim();
+            if (newTask !== '') {
+                fetch('https://picsum.photos/200/150')
+                    .then(response => response.url)
+                    .then(imageUrl => {
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('task');
+                        listItem.innerHTML = `
+                            <img src="${imageUrl}" alt="Imagen de estudio">
+                            <span>${newTask}</span>
+                            <button class="complete-button">Completar</button>
+                            <button class="delete-button">Eliminar</button>
+                        `;
+                        
+                        const completeButton = listItem.querySelector('.complete-button');
+                        completeButton.addEventListener('click', () => {
+                            listItem.classList.toggle('completed');
+                        });
+
+                        const deleteButton = listItem.querySelector('.delete-button');
+                        deleteButton.addEventListener('click', () => {
+                            listItem.remove();
+                        });
+
+                        taskList.appendChild(listItem);
+                        taskInput.value = '';
+                    })
+                    .catch(error => console.error(error));
+            }
+        });
+    </script>
+</body>
+</html>
